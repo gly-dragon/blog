@@ -19,6 +19,9 @@ export default hopeTheme({
   repoLabel: "GitHub",
   // 是否显示Git仓库链接
   repoDisplay: true,
+  editLink: false,
+  lastUpdated: true,
+  contributors: true,
 
   // 全屏切换按钮
   fullscreen: true,
