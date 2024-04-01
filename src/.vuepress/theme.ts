@@ -4,6 +4,7 @@ import sidebar from "./sidebar.js";
 
 export default hopeTheme({
   hostname: "https://gly-dragon.github.io/blog/",
+  favicon: 'https://gly-blog-file.oss-cn-shanghai.aliyuncs.com/avatar%20.jpg',
 
   author: {
     name: "龙哥不管事",
