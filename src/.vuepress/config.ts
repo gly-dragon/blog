@@ -5,7 +5,7 @@ export default defineUserConfig({
   base: "/blog/",
 
   lang: "zh-CN",
-  title: "书元",
+  title: "龙哥不管事",
   description: "",
 
   theme,
