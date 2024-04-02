@@ -4,7 +4,7 @@ import sidebar from "./sidebar.js";
 
 export default hopeTheme({
   hostname: "https://gly-dragon.github.io/blog/",
-  favicon: 'https://gly-blog-file.oss-cn-shanghai.aliyuncs.com/avatar%20.jpg',
+  favicon: 'https://gly-blog-file.oss-cn-shanghai.aliyuncs.com/avatar.jpg',
 
   author: {
     name: "龙哥不管事",
@@ -13,7 +13,7 @@ export default hopeTheme({
 
   iconAssets: "fontawesome-with-brands",
 
-  logo: "https://gly-blog-file.oss-cn-shanghai.aliyuncs.com/avatar%20.jpg",
+  logo: "https://gly-blog-file.oss-cn-shanghai.aliyuncs.com/avatar.jpg",
 
   // Git仓库地址
   repo: "gly-dragon/blog",
