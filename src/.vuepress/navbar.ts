@@ -3,17 +3,27 @@ import { navbar } from "vuepress-theme-hope";
 export default navbar([
   "/",
   {
-    text: '数据库',
-    icon: 'database',
-    prefix: '/database/',
+    text: '专项笔记',
+    icon: 'book',
     children: [
       {
-        text: 'mysql',
-        link: 'mysql/'
-      }, {
-        text: 'redis',
-        link: 'redis/'
+        text: '数据库',
+        prefix: '/数据库/',
+        children: [
+          {
+            text: 'mysql',
+            link: 'mysql/'
+          }, {
+            text: 'redis',
+            link: 'redis/'
+          }
+        ]
       }
     ]
+  },
+  {
+    text: '进阶之路',
+    icon: 'trophy',
+    children: []
   }
 ]);

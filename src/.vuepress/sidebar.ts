@@ -1,5 +1,5 @@
 import { sidebar } from "vuepress-theme-hope";
 
 export default sidebar({
-  "/database": "structure"
+  "/数据库": "structure"
 });
