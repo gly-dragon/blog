@@ -1,1 +1,15 @@
 // place your custom styles here
+body{
+    background-image: url('/assets/images/bg_paper.png');
+}
+
+.vp-sidebar{
+    background: transparent;
+    backdrop-filter: none;
+}
+.vp-footer-wrapper{
+    background: transparent;
+}
+.vp-navbar{
+    background: transparent;
+}
