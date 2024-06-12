@@ -11,7 +11,8 @@ export default hopeTheme({
     url: "https://gly-dragon.github.io/blog/",
   },
 
-  iconAssets: "fontawesome-with-brands",
+  iconAssets: "//at.alicdn.com/t/c/font_4582440_sz8ejdaez69.css",
+  iconPrefix: "ic ic-",
 
   logo: "https://gly-blog-file.oss-cn-shanghai.aliyuncs.com/avatar.jpg",
 

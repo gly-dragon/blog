@@ -12,10 +12,12 @@ export default navbar([
         children: [
           {
             text: 'mysql',
-            link: 'mysql/'
+            link: 'mysql/',
+            icon: 'mysql'
           }, {
             text: 'redis',
-            link: 'redis/'
+            link: 'redis/',
+            icon: 'redis'
           }
         ]
       }
