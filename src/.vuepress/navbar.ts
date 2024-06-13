@@ -31,5 +31,9 @@ export default navbar([
     text: '进阶之路',
     icon: 'trophy',
     children: []
+  }, {
+    text: '经验之谈',
+    icon: 'experience',
+    children: []
   }
 ]);
