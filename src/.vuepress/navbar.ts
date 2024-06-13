@@ -8,7 +8,7 @@ export default navbar([
     children: [
       {
         text: '数据库',
-        prefix: '/数据库/',
+        prefix: '/专项/数据库/',
         children: [
           {
             text: 'mysql',
@@ -20,6 +20,10 @@ export default navbar([
             icon: 'redis'
           }
         ]
+      }, {
+        text: 'Java专项',
+        prefix: '',
+        children: []
       }
     ]
   },

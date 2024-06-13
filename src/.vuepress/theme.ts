@@ -11,7 +11,7 @@ export default hopeTheme({
     url: "https://gly-dragon.github.io/blog/",
   },
 
-  iconAssets: "//at.alicdn.com/t/c/font_4582440_sz8ejdaez69.css",
+  iconAssets: "//at.alicdn.com/t/c/font_4582440_yoj5dffrzo.css",
   iconPrefix: "ic ic-",
 
   logo: "https://gly-blog-file.oss-cn-shanghai.aliyuncs.com/avatar.jpg",
@@ -44,7 +44,6 @@ export default hopeTheme({
   blog: {
     description: "",
     intro: "/intro.html",
-    roundAvatar: true,
     medias: {
 
     },
@@ -66,7 +65,7 @@ export default hopeTheme({
   // pure: false,
 
   // 如果想要实时查看任何改变，启用它。注: 这对更新性能有很大负面影响
-  // hotReload: true,
+  hotReload: true,
 
   /*   navbarLayout: {
       start: ['Brand'],
