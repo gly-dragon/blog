@@ -32,8 +32,12 @@ export default navbar([
     icon: 'trophy',
     children: []
   }, {
-    text: '经验之谈',
+    text: '日积月累',
     icon: 'experience',
+    children: []
+  },
+  {
+    text: '工具',
     children: []
   }
 ]);
