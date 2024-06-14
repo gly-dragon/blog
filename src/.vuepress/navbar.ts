@@ -23,6 +23,7 @@ export default navbar([
       }, {
         text: 'Java专项',
         prefix: '',
+        icon: 'util',
         children: []
       }
     ]
