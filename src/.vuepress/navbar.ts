@@ -22,9 +22,15 @@ export default navbar([
         ]
       }, {
         text: 'Java专项',
-        prefix: '',
+        prefix: '/专项/Java专项',
         icon: 'util',
-        children: []
+        children: [
+          {
+            text: 'java基础',
+            link: 'Java基础/',
+            icon: 'java'
+          }
+        ]
       }
     ]
   },
@@ -39,6 +45,7 @@ export default navbar([
   },
   {
     text: '工具',
+    icon: 'util',
     children: []
   }
 ]);
