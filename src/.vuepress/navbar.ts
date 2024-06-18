@@ -23,14 +23,23 @@ export default navbar([
       }, {
         text: 'Java专项',
         prefix: '/专项/Java专项',
-        icon: 'util',
         children: [
           {
             text: 'java基础',
             link: 'Java基础/',
             icon: 'java'
+          }, {
+            text: 'java高级',
+            link: ''
+          }, {
+            text: 'java web',
+            link: ''
           }
         ]
+      }, {
+        text: 'java框架',
+        // prefix: '',
+        children: []
       }
     ]
   },
