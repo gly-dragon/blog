@@ -50,7 +50,13 @@ export default navbar([
   }, {
     text: '模板方案',
     icon: 'experience',
-    children: []
+    prefix: '/方案',
+    children: [
+      {
+        text: 'Java项目',
+        link: 'Java项目/'
+      }
+    ]
   },
   {
     text: '工具',
