@@ -48,7 +48,7 @@ export default navbar([
     icon: 'trophy',
     children: []
   }, {
-    text: '日积月累',
+    text: '模板方案',
     icon: 'experience',
     children: []
   },
