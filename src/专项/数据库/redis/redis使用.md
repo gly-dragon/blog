@@ -5,19 +5,20 @@ tags:
   - 数据库
 order: "9"
 ---
-## 1、在不同项目中使用redis
 
-使用代码连接redis时，如果不使用jedis连接池，则直接创建jedis对象，指定主机地址和端口号即可：
+## 1、在不同项目中使用 redis
+
+使用代码连接 redis 时，如果不使用 jedis 连接池，则直接创建 jedis 对象，指定主机地址和端口号即可：
 
 ```java
 Jedis jedis = new Jedis("192.168.170.131", 6379);
 ```
 
-该笔记一下内容均为使用jedis连接池版本配置。
+该笔记一下内容均为使用 jedis 连接池版本配置。
 
-### 1.1、spring中使用redis
+### 1.1、spring 中使用 redis
 
-spring项目中使用redis，无论是使用单机版还是使用集群版都需要添加jedis和commons-pool2的jar包，如果是普通的java项目，则把这两个jar包放到lib文件夹里面直接添加即可，如果是maven项目，那么需要在pom文件中配置依赖：
+spring 项目中使用 redis，无论是使用单机版还是使用集群版都需要添加 jedis 和 commons-pool2 的 jar 包，如果是普通的 java 项目，则把这两个 jar 包放到 lib 文件夹里面直接添加即可，如果是 maven 项目，那么需要在 pom 文件中配置依赖：
 
 ```xml
 <dependency>
@@ -33,9 +34,9 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
 </dependency>
 ```
 
-#### 1.1.1、使用单机版redis
+#### 1.1.1、使用单机版 redis
 
-1. 添加application-redis.xml文件，并配置相关信息
+1. 添加 application-redis.xml 文件，并配置相关信息
 
    ```xml
    <!-- ################ 配置Redis单机版 #################-->
@@ -52,7 +53,7 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
        <!--销毁多余连接的时间-->
        <property name="softMinEvictableIdleTimeMillis" value="3000"/>
    </bean>
-   
+
    <!--创建jedis连接池-->
    <bean class="redis.clients.jedis.JedisPool" id="jedisPool">
        <!--注入连接池配置类-->
@@ -64,48 +65,48 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    </bean>
    ```
 
-1. 创建JedisClient接口，按需封装一组操作redis数据的方法
+1. 创建 JedisClient 接口，按需封装一组操作 redis 数据的方法
 
    ```java
    package org.java.redis;
-   
+
    public interface JedisClient {
-   
+
        //字符串类型的存储
        void set(String key, String value);
-   
+
        //字符串类型的读取
        String get(String key);
-   
+
        //hash类型的存储
        void hset(String key, String field, String value);
-   
+
        //hash类型的读取
        String hget(String key, String field);
-   
+
        //hash类型的删除
        void hdel(String key, String field);
    }
    ```
 
-1. 创建JedisClientSingle（单击版jedis客户端），实现JedisClient接口，用于获得连接，并把数据存入到redis中。
+1. 创建 JedisClientSingle（单击版 jedis 客户端），实现 JedisClient 接口，用于获得连接，并把数据存入到 redis 中。
 
    ```java
    package org.java.redis.impl;
-   
+
    import org.java.redis.JedisClient;
    import org.springframework.beans.factory.annotation.Autowired;
    import org.springframework.stereotype.Component;
    import redis.clients.jedis.Jedis;
    import redis.clients.jedis.JedisPool;
-   
+
    @Component("jedisClientSingle")//标识组件，用于扫描
    public class JedisClientSingle implements JedisClient {
-   
+
        //Jedis连接池，它可以产生jedis
        @Autowired
        private JedisPool jedisPool;
-   
+
        @Override
        public void set(String key, String value) {
            //通过连接池产生jedis
@@ -114,7 +115,7 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
            //关闭jedi-------此处的关闭，并不会释放资源，只是将用完的连接放回到连接池，该连接是可以继续使用的
            jedis.close();
        }
-   
+
        @Override
        public String get(String key) {
            Jedis jedis = jedisPool.getResource();
@@ -122,14 +123,14 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
            jedis.close();
            return value;
        }
-   
+
        @Override
        public void hset(String key, String field, String value) {
            Jedis jedis = jedisPool.getResource();
            jedis.hset(key,field,value);
            jedis.close();
        }
-   
+
        @Override
        public String hget(String key, String field) {
            Jedis jedis = jedisPool.getResource();
@@ -137,7 +138,7 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
            jedis.close();
            return value;
        }
-   
+
        @Override
        public void hdel(String key, String field) {
            Jedis jedis = jedisPool.getResource();
@@ -147,11 +148,11 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    }
    ```
 
-1. 在service层的方法中使用单机版的客户端连接redis并操作数据
+1. 在 service 层的方法中使用单机版的客户端连接 redis 并操作数据
 
    ```java
    package org.java.service.impl;
-   
+
    import org.java.dao.PrdMapper;
    import org.java.entity.Prd;
    import org.java.redis.JedisClient;
@@ -161,18 +162,18 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    import org.springframework.beans.factory.annotation.Qualifier;
    import org.springframework.stereotype.Service;
    import org.springframework.util.StringUtils;
-   
+
    import java.util.List;
-   
+
    @Service
    public class PrdServiceImpl implements PrdService {
        @Autowired
        private PrdMapper mapper;
-   
+
        @Autowired
        @Qualifier("jedisClientSingle")
        private JedisClient jedisClient;
-   
+
        @Override
        public Prd findById(String pid) {
            //首先判断缓存中有没有需要的数据
@@ -210,15 +211,15 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    }
    ```
 
-   以上案例中使用了双检锁来处理在高并发环境下缓存击穿的问题，如果只是单纯的需要使用jedis来操作redis，则只需要调用jedis的方法并传入相应的参数即可。
+   以上案例中使用了双检锁来处理在高并发环境下缓存击穿的问题，如果只是单纯的需要使用 jedis 来操作 redis，则只需要调用 jedis 的方法并传入相应的参数即可。
 
    ```java
-    String json = jedisClient.hget("redis_j54_singleton", pid); 
+    String json = jedisClient.hget("redis_j54_singleton", pid);
    ```
 
-#### 1.1.2、使用集群版redis
+#### 1.1.2、使用集群版 redis
 
-1. 添加application-redis.xml文件，并添加相关配置。
+1. 添加 application-redis.xml 文件，并添加相关配置。
 
    ```xml
    <!-- ################ 配置Redis集群版 #################-->
@@ -235,7 +236,7 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
        <!--销毁多余连接的时间-->
        <property name="softMinEvictableIdleTimeMillis" value="3000"/>
    </bean>
-   
+
    <!--使用的是集群版的jedis对象-->
    <bean class="redis.clients.jedis.JedisCluster">
        <!--注入redis服务器-->
@@ -273,42 +274,42 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    </bean>
    ```
 
-1. 创建JedisClientCluster类实现JedisClient接口，该接口创建见上述单机版创建的第二步
+1. 创建 JedisClientCluster 类实现 JedisClient 接口，该接口创建见上述单机版创建的第二步
 
    ```java
    package org.java.redis.impl;
-   
+
    import org.java.redis.JedisClient;
    import org.springframework.beans.factory.annotation.Autowired;
    import org.springframework.stereotype.Component;
    import redis.clients.jedis.JedisCluster;
-   
+
    @Component("jedisClientCluster")
    public class JedisClientCluster implements JedisClient {
-   
+
    	@Autowired
    	private JedisCluster jedisCluster;
-   
+
    	@Override
    	public void set(String key, String value) {
    		jedisCluster.set(key,value);
    	}
-   
+
    	@Override
    	public String get(String key) {
    		return jedisCluster.get(key);
    	}
-   
+
    	@Override
    	public void hset(String key, String field, String value) {
    		jedisCluster.hset(key,field,value);
    	}
-   
+
    	@Override
    	public String hget(String key, String field) {
    		return jedisCluster.hget(key,field);
    	}
-   
+
    	@Override
    	public void hdel(String key, String field) {
    		jedisCluster.hdel(key,field);
@@ -316,7 +317,7 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    }
    ```
 
-1. 在service层的使用和单击版一样，只是注入的jedisClient不同
+1. 在 service 层的使用和单击版一样，只是注入的 jedisClient 不同
 
    ```java
     @Autowired
@@ -324,11 +325,11 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
     private JedisClient jedisClient;
    ```
 
-### 1.2、springboot中使用redis
+### 1.2、springboot 中使用 redis
 
-#### 1.2.1、使用单机版redis
+#### 1.2.1、使用单机版 redis
 
-1. 创建项目，创建springboot项目，在创建时可以直接导入noSQL中的redis  Drive，或者在pom文件中配置：
+1. 创建项目，创建 springboot 项目，在创建时可以直接导入 noSQL 中的 redis Drive，或者在 pom 文件中配置：
 
    ```xml
    <dependency>
@@ -337,7 +338,7 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    </dependency>
    ```
 
-2. 在application.yml中配置redis的连接信息
+2. 在 application.yml 中配置 redis 的连接信息
 
    ```yaml
    spring:
@@ -353,11 +354,11 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
                        time-between-eviction-runs: 3000ms #闲置连接超过上限，将闲置3秒以上多余连接销毁
    ```
 
-3. 使用redis进行缓存
+3. 使用 redis 进行缓存
 
-   在springboot中使用redis进行缓存有两种方式，分别是使用redis的注解和使用RedisTemplate的模板
+   在 springboot 中使用 redis 进行缓存有两种方式，分别是使用 redis 的注解和使用 RedisTemplate 的模板
 
-   **方式一：** 使用redis注解，该方法需要在启动类配置redis缓存管理，`@EnableCaching`启用redis注解，然后在业务类中需要使用redis缓存的方法上加上`@Cacheable`注解即可。
+   **方式一：** 使用 redis 注解，该方法需要在启动类配置 redis 缓存管理，`@EnableCaching`启用 redis 注解，然后在业务类中需要使用 redis 缓存的方法上加上`@Cacheable`注解即可。
 
    ```java
    @SpringBootApplication
@@ -378,14 +379,14 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    }
    ```
 
-   该方式的缓存原理是生成的缓存名为：注解参数::方法参数，比如该案例中如果传入的id值为1，那么生成的缓存名，即key为`springboot::1`。但是该方法在高并发的环境中会发送缓存击穿的情况并不适合使用，因此在高并发的环境下一般使用的是方式二。
+   该方式的缓存原理是生成的缓存名为：注解参数::方法参数，比如该案例中如果传入的 id 值为 1，那么生成的缓存名，即 key 为`springboot::1`。但是该方法在高并发的环境中会发送缓存击穿的情况并不适合使用，因此在高并发的环境下一般使用的是方式二。
 
-   **方式二：** 使用RedisTemplate模板进行配置，该方法需要自己指定key的值并且需要处理key可能存在的乱码问题，应用也比较繁琐，但是由于加入了双检锁，所以在高并发的环境下也可以使用，不会发送缓存击穿的情况。
+   **方式二：** 使用 RedisTemplate 模板进行配置，该方法需要自己指定 key 的值并且需要处理 key 可能存在的乱码问题，应用也比较繁琐，但是由于加入了双检锁，所以在高并发的环境下也可以使用，不会发送缓存击穿的情况。
 
    ```java
    @Autowired
    private RedisTemplate<Object, Object> redisTemplate;
-   
+
    @Override
    @Cacheable("springboot")
    public Inf findById(Integer id) {
@@ -411,9 +412,9 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    }
    ```
 
-#### 1.2.2、使用集群版redis
+#### 1.2.2、使用集群版 redis
 
-1. 使用集群版redis需要导入jedis的依赖，导入了jedis依赖就不需要导入单击版中导入过的redis依赖。
+1. 使用集群版 redis 需要导入 jedis 的依赖，导入了 jedis 依赖就不需要导入单击版中导入过的 redis 依赖。
 
    ```xml
    <dependency>
@@ -431,7 +432,7 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    </dependency>
    ```
 
-1. 在application.yml文件中配置集群的连接信息
+1. 在 application.yml 文件中配置集群的连接信息
 
    ```yaml
    spring:
@@ -441,25 +442,25 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    		 	nodes: 192.168.170.131:7001,192.168.170.131:7002,192.168.170.131:7003,192.168.170.131:7004,192.168.170.131:7005,192.168.170.131:7006
    ```
 
-3. 在配置类中配置集群的信息，并创建集群
+1. 在配置类中配置集群的信息，并创建集群
 
    ```java
    package org.java.conf;
-   
+
    import org.springframework.beans.factory.annotation.Value;
    import org.springframework.context.annotation.Bean;
    import org.springframework.context.annotation.Configuration;
    import redis.clients.jedis.HostAndPort;
    import redis.clients.jedis.JedisCluster;
-   
+
    import java.util.HashSet;
    import java.util.Set;
-   
+
    @Configuration //标识是一个配置类
    public class RedisConfig {
    	@Value("${spring.redis.cluster.nodes}")
    	private String nodes;
-   
+
    	@Bean
    	public JedisCluster jedisCluster() {
    		//创建set集合，存放主机信息
@@ -477,15 +478,15 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    		return jc;
    	}
    }
-   
+
    ```
 
-   在services实现类中存储数据时需要自己指定key，如果存入的是对象类型，可以转换成json类型进行存储。
+   在 services 实现类中存储数据时需要自己指定 key，如果存入的是对象类型，可以转换成 json 类型进行存储。
 
    ```java
    @Autowired
    private JedisCluster jedisCluster;
-   
+
    //集群版配置
    @Override
    public Inf findById(Integer id) {
@@ -502,11 +503,11 @@ spring项目中使用redis，无论是使用单机版还是使用集群版都需
    }
    ```
 
-   > **注意：** 以上代码使用了json工具类进行转换，所以在使用时需要引入json工具类才可以使用
+   > **注意：** 以上代码使用了 json 工具类进行转换，所以在使用时需要引入 json 工具类才可以使用
 
-### 1.3、使用jedis操作redis
+### 1.3、使用 jedis 操作 redis
 
-Jedis是java开发的操作redis的工具包。使用jedis需要添加jedis的架包。如果是maven项目，直接在pom文件中导入即可：
+Jedis 是 java 开发的操作 redis 的工具包。使用 jedis 需要添加 jedis 的架包。如果是 maven 项目，直接在 pom 文件中导入即可：
 
 ```xml
 <dependency>
@@ -516,11 +517,11 @@ Jedis是java开发的操作redis的工具包。使用jedis需要添加jedis的�
 </dependency>
 ```
 
-#### 1.3.1、jedis主要方法
+#### 1.3.1、jedis 主要方法
 
-jedis提供了一组操作redis的方法，比如添加字符串的方法是：`jedis.set("键","值")`。
+jedis 提供了一组操作 redis 的方法，比如添加字符串的方法是：`jedis.set("键","值")`。
 
-以下示例描述一部分jedis的方法以及使用
+以下示例描述一部分 jedis 的方法以及使用
 
 ```java
 import org.junit.After;
@@ -536,18 +537,18 @@ import java.util.concurrent.TimeUnit;
 
 public class JedisDemo {
     Jedis jedis;
-    
+
     @Before
     public void before() {
     	this.jedis = new Jedis("192.168.200.129", 6379);
     }
-    
+
     @After
     public void after() {
         //关闭jedis
         this.jedis.close();
     }
-    
+
     /**
     * 测试redis是否连通
     */
@@ -556,7 +557,7 @@ public class JedisDemo {
         String ping = jedis.ping();
         System.out.println(ping);
     }
-    
+
     /**
     * string类型测试
     */
@@ -566,7 +567,7 @@ public class JedisDemo {
         System.out.println(jedis.get("site"));
         System.out.println(jedis.ttl("site"));
     }
-    
+
     /**
     * list类型测试
     */
@@ -578,7 +579,7 @@ public class JedisDemo {
         	System.out.println(course);
         }
     }
-    
+
     /**
     * set类型测试
     */
@@ -590,7 +591,7 @@ public class JedisDemo {
         	System.out.println(user);
         }
     }
-    
+
     /**
     * hash类型测试
     */
@@ -602,7 +603,7 @@ public class JedisDemo {
         Map<String, String> userMap = jedis.hgetAll("user:1001");
         System.out.println(userMap);
     }
-    
+
     /**
     * zset类型测试
     */
@@ -614,7 +615,7 @@ public class JedisDemo {
         List<String> languages = jedis.zrange("languages", 0, -1);
         System.out.println(languages);
     }
-    
+
     /**
     * 订阅消息
     *
@@ -631,7 +632,7 @@ public class JedisDemo {
         }, "sitemsg");
         TimeUnit.HOURS.sleep(1);
     }
-    
+
     /**
     * 发布消息
     *
@@ -644,9 +645,9 @@ public class JedisDemo {
 }
 ```
 
-### 1.4、使用RedisTemplate工具类操作redis
+### 1.4、使用 RedisTemplate 工具类操作 redis
 
-在springboot中使用RedisTemplate操作redis时，需要注入RedisTemplate对象，使用自动注入即可
+在 springboot 中使用 RedisTemplate 操作 redis 时，需要注入 RedisTemplate 对象，使用自动注入即可
 
 ```java
 @Autowired
@@ -659,7 +660,7 @@ this.redisTemplate.opsForHash(); //提供了操作hash表的所有方法
 this.redisTemplate.opsForZSet(); //提供了操作zset的所有方法
 ```
 
-#### 1.4.1、RedisTemplate示例代码
+#### 1.4.1、RedisTemplate 示例代码
 
 ```java
 import org.springframework.beans.factory.annotation.Autowired;
@@ -677,7 +678,7 @@ import java.util.Set;
 public class RedisController {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-    
+
     @RequestMapping("/stringTest")
     public String stringTest() {
         this.redisTemplate.delete("name");
@@ -685,7 +686,7 @@ public class RedisController {
         String name = this.redisTemplate.opsForValue().get("name");
         return name;
     }
-    
+
     @RequestMapping("/listTest")
     public List<String> listTest() {
         this.redisTemplate.delete("names");
@@ -693,7 +694,7 @@ public class RedisController {
         List<String> courses = this.redisTemplate.opsForList().range("names", 0,-1);
         return courses;
     }
-    
+
     @RequestMapping("setTest")
     public Set<String> setTest() {
         this.redisTemplate.delete("courses");
@@ -701,7 +702,7 @@ public class RedisController {
         Set<String> courses = this.redisTemplate.opsForSet().members("courses");
         return courses;
     }
-    
+
     @RequestMapping("hashTest")
     public Map<Object, Object> hashTest() {
         this.redisTemplate.delete("userMap");
@@ -712,7 +713,7 @@ public class RedisController {
         Map<Object, Object> userMap = this.redisTemplate.opsForHash().entries("userMap");
     return userMap;
     }
-    
+
     @RequestMapping("zsetTest")
     public Set<String> zsetTest() {
         this.redisTemplate.delete("languages");
@@ -726,4 +727,4 @@ public class RedisController {
 }
 ```
 
-实际使用中不需要使用this关键字仍可以正常使用，详情看sprigboot中使用redis单机版。
+实际使用中不需要使用 this 关键字仍可以正常使用，详情看 sprigboot 中使用 redis 单机版。
