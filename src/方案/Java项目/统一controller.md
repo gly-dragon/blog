@@ -35,10 +35,10 @@ title: 统一controller
    public enum ResultCode implements StatusCode{
        SUCCESS(200, "请求成功"),
        FAILED(400, "请求失败");
-
+   
        private int code;
        private String msg;
-
+   
        ResultCode(int code, String msg) {
            this.code = code;
            this.msg = msg;
@@ -182,7 +182,7 @@ public boolean supports(MethodParameter methodParameter, @Nullable Class aClass)
 ```java
 @GetMapping("/health")
 @NotControllerResponseAdvice
-    public String health() {
+public String health() {
     return "success";
 }
 ```
@@ -283,3 +283,44 @@ public User (@Validate User user){
     return service.add(user);
 }
 ```
+
+## 统一异常
+
+以参数校验为例，若参数校验失败，我们可以在控制台看到异常：
+
+```java
+Resolved [org.springframework.validation.BindException: xxxxx ]
+```
+
+同时，这会导致前端得到一连串的错误结果，这是我们在开发过程中应该避免的，对此springboot提供了`@RestControllerAdvice`和`@ExceptionHandler`来对异常进行统一处理，处理后就可以直接返回统一的响应结果`Result`。
+
+以`BindException`为例，在返回前对异常信息进行包装，返回`Result`并带上校验错误的状态码：
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionAdvice {
+	@ExceptionHandler(BindException.class)
+    public Result<String> bindExceptionHandler(BindException e) {
+        String message = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
+        if (StrUtil.isEmpty(message)) {
+            message = ResultCode.VALIDATE_ERROR.getMsg();
+        }
+        return new Result(ResultCode.VALIDATE_ERROR.getCode(), message);
+	}
+}
+```
+
+利用这种方式，能够统一处理大部分异常，比如我们自定义的异常`ApiException`：
+
+```java
+@ExceptionHandler(APIException.class)
+public Result<String> APIExceptionHandler(APIException e) {
+    log.info("异常状态码：{}，异常信息：{}", e.getCode(), e.getMessage());
+    String message = e.getMessage();
+    if (StringUtils.isEmpty(message)) {
+        message = e.getMsg();
+    }
+    return new Result(e.getCode(), message);
+}
+```
+
