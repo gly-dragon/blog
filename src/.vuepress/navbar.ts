@@ -46,7 +46,14 @@ export default navbar([
   {
     text: '进阶之路',
     icon: 'trophy',
-    children: []
+    children: [{
+      text: '设计模式',
+      children: [{
+        text: '设计模式详解',
+        link: '/进阶/设计模式/',
+        icon: 'sheji'
+      }]
+    }]
   }, {
     text: '模板方案',
     icon: 'experience',
