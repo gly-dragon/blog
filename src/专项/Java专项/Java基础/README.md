@@ -84,7 +84,7 @@ Java 使用 Unicode 作为它的标准字符，这项特性使得 Java 的程序
 
 **jvm**
 
-**JVM(JavaVirtualMachine)**即 Java 虚拟机，是一种用于计算设备的规范，它是一个虚构出来的计算机，用于解释执行 class 文件，有了 JVM 之后，Java 就可以实现跨平台。JVM 只需要保证能够正确执行.class 文件，就可以运行在诸如 Linux、Windows、MacOS 等平台上。
+**JVM(JavaVirtualMachine)** 即 Java 虚拟机，是一种用于计算设备的规范，它是一个虚构出来的计算机，用于解释执行 class 文件，有了 JVM 之后，Java 就可以实现跨平台。JVM 只需要保证能够正确执行.class 文件，就可以运行在诸如 Linux、Windows、MacOS 等平台上。
 
 **jvm、jre、jdk 的关系**
 
