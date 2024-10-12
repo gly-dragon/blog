@@ -11,7 +11,7 @@ export default hopeTheme({
     url: "https://gly-dragon.github.io/blog/",
   },
 
-  iconAssets: "//at.alicdn.com/t/c/font_4582440_uhjtd3jlgdf.css",
+  iconAssets: "//at.alicdn.com/t/c/font_4582440_8i5zs1z3om6.css",
   iconPrefix: "ic ic-",
 
   logo: "https://gly-blog-file.oss-cn-shanghai.aliyuncs.com/avatar.jpg",
@@ -93,15 +93,11 @@ export default hopeTheme({
     mdEnhance: {
       align: true,
       attrs: true,
-      codetabs: true,
       component: true,
-      imgLazyload: true,
-      imgSize: true,
       include: true,
       mark: true,
       sub: true,
       sup: true,
-      tabs: true,
 
       // 在启用之前安装 chart.js
       // chart: true,

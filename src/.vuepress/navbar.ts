@@ -1,8 +1,7 @@
 import { navbar } from "vuepress-theme-hope";
 
 export default navbar([
-  "/",
-  {
+  "/", {
     text: '专项笔记',
     icon: 'book',
     children: [
@@ -42,8 +41,7 @@ export default navbar([
         children: []
       }
     ]
-  },
-  {
+  }, {
     text: '进阶之路',
     icon: 'trophy',
     children: [{
@@ -64,10 +62,26 @@ export default navbar([
         link: 'Java项目/'
       }
     ]
-  },
-  {
+  }, {
     text: '工具',
     icon: 'util',
-    children: []
+    prefix: '/工具/',
+    children: [{
+      text: '文件服务',
+      prefix: '文件服务/',
+      children: [{
+        text: 'FastDfs',
+        link: 'FastDfs',
+        icon: 'fast-dfs'
+      }]
+    }, {
+      text: '数据库',
+      prefix: '数据库/',
+      children: [{
+        text: 'redis',
+        link: 'redis',
+        icon: 'redis'
+      }]
+    }]
   }
 ]);
