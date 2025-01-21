@@ -60,6 +60,9 @@ export default navbar([
       {
         text: 'Java项目',
         link: 'Java项目/'
+      }, {
+        text: '支付',
+        link: '支付/'
       }
     ]
   }, {
